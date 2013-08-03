@@ -8,6 +8,7 @@ var qs = require('querystring');
 var URLS = require('./urls.js');
 var request = require('request');
 
+module.exports = Unlock;
 
 /**
  * Constructor for the places interface.
@@ -15,14 +16,7 @@ var request = require('request');
  */
 
 function Unlock(defaults) {
-  defaults = defaults || {
-    format: 'json'
-  };
-
-  // Apply all defaults if provided
-  for (var key in this.defaults) {
-    this[key] = this.defaults[key];
-  }
+  this.setDefaults(defaults);
 }
 
 Unlock.prototype = {
@@ -33,7 +27,7 @@ Unlock.prototype = {
    * @param {String}   mode
    */
   setResponseFormat: function(format) {
-    this.format = format.toLowerCase();
+    this.defaults.format = format.toLowerCase();
   },
 
 
@@ -42,27 +36,52 @@ Unlock.prototype = {
    * @return {String}
    */
   getResponseFormat: function() {
-    return this.format;
+    return this.defaults.format;
   },
 
 
+  /**
+   * Set the default gazatteer to use.
+   * @params {String} gz
+   */
   setGazetteer: function(gz) {
-    this.gazetteer = gz;
+    this.defaults.gazetteer = gz;
   },
 
+
+  /**
+   * Get the default gazatteer being used
+   * @return {String}
+   */
   getGazetteer: function() {
-    return this.gazetteer;
+    return this.defaults.gazetteer;
   },
 
 
-  setFeatureType: function(ft) {
-    this.featureType = ft;
+  /**
+   * Set defaults to use.
+   * @param {Object} defaults
+   */
+  setDefaults: function(defaults) {
+    this.defaults = defaults || {
+      format: 'json',
+      gazetteer: 'unlock'
+    };
+
+    // Always use JSON as default data format
+    if (!this.defaults.format) {
+      this.defaults.format = 'json';
+    }
   },
 
-  getFeatureType: function() {
-    return this.featureType;
-  },
 
+  /**
+   * Get the defaults being used.
+   * @return {Object}
+   */
+  getDefaults: function() {
+    return this.defaults;
+  },
 
 
   /**
@@ -75,7 +94,7 @@ Unlock.prototype = {
 
     // Add in the defaults provided
     for (var key in this.defaults) {
-      if (!params[key]) {
+      if (!params[key] && this.defaults[key] !== null) {
         params[key] = this.defaults[key];
       }
     }
@@ -91,14 +110,21 @@ Unlock.prototype = {
    * @params {Function} callback
    */
   doRequest: function(url, params, callback) {
-    params = params || {};
+    if (typeof params === 'function') {
+      callback = params;
+      params = {};
+    }
 
     request({
       url: url,
-      qs: buildParams(params),
+      qs: this.buildParams(params),
     }, function(err, res, body) {
       if (err) {
         return callback(err, null);
+      } else if (res.statusCode !== 200) {
+        return callback({
+          err: 'Request error, status code: ' + res.statusCode
+        }, null);
       } else {
         return callback(null, body);
       }
@@ -106,18 +132,19 @@ Unlock.prototype = {
   },
 
 
+  /**
+   * Takes an array of strings and converts into single string
+   * @param {Array}     arr
+   * @param {Function}  callback
+   */
   arrayToString: function(arr, callback) {
     var str = '';
-    async.forEach(arr, function(item, cb) {
-      str += item + ',';
-      cb();
-    }, function(err) {
-      if (err) {
-        return callback(err, null);
-      }
 
-      return callback(null, str)
+    arr.forEach(function(item) {
+      str += item + ',';
     });
+
+    return str;
   },
 
 
@@ -136,20 +163,21 @@ Unlock.prototype = {
 
     // Parse in names as comma seperated if not already provided in this format
     if (typeof names !== 'string') {
-      this.arrayToString(names, function(err, items) {
-        if (err) {
-          return callback(err);
-        }
-
-        params.name = items;
-        doRequest(URLS.SEARCH_URL, params, callback);
-      });
-    } else {
-      params.name = names;
-      doRequest(URLS.SEARCH_URL, params, callback);
+      names = this.arrayToString(names);
     }
+
+    params.name = names;
+    this.doRequest(URLS.SEARCH_URL, params, callback);
   },
 
+
+  /**
+   * Search for places by name in a provided country.
+   * @param {Mixed}     name        String/Array of names
+   * @param {Mixed}     country     String/Array of countries
+   * @param {Object}    [params]    Optional extra query parameters
+   * @param {Function}  callback
+   */
   searchByCountryAndName: function(name, country, params, callback) {
     var self = this;
 
@@ -160,33 +188,64 @@ Unlock.prototype = {
 
     // Parse in names as comma seperated if not already provided in this format
     if (typeof name !== 'string') {
-      this.arrayToString(name, function(err, items) {
-        if (err) {
-          return callback(err);
-        }
-
-        self.searchByCountryAndName(items, country, params, callback);
-      });
-    } else if (typeof country !== 'string') {
-      this.arrayToString(country, function(err, items) {
-        if (err) {
-          return callback(err);
-        }
-
-        self.searchByCountryAndName(name, items, params, callback);
-      });
-    } else {
-      params.country = country;
-      params.country = name;
-      doRequest(URLS.SEARCH_URL, params, callback);
+      name = this.arrayToString(name);
     }
+    if (typeof country !== 'string') {
+      country = this.arrayToString(country);
+    }
+
+    params.country = country;
+    params.name = name;
+    this.doRequest(URLS.SEARCH_URL, params, callback);
   },
+
+
+  /**
+   * Get footprint for a provided area
+   * @param {Number}    id
+   * @param {Object}    [params]
+   * @param {Function}  callback
+   */
+  footprintLookup: function(id, params, callback) {
+    params.identifier = id;
+    this.doRequest(URLS.FOOTPRINT_LOOKUP, params, callback);
+  },
+
+
+  /**
+   * Search for a feature by ID
+   * @param {Number}    id
+   * @param {Object}    [params]
+   * @param {Function}  callback
+   */
+  featureLookup: function(id, params, callback) {
+    if (typeof params === 'function') {
+      callback = params;
+      params = {};
+    }
+
+    // Add in identifier to querystring params
+    params.identifier = id;
+
+    this.doRequest(URLS.FEATURE_LOOKUP, params, callback);
+  },
+
+
+  /**
+   * Search for closest match for params
+   * @param {Object}    params
+   * @param {Function}  callback
+   */
+  closestMatchSearch: function(params, callback) {
+    this.doRequest(URLS.CLOSEST_MATCH, params, callback);
+  },
+
 
   /**
    * Returns a list of all supported feature types from the API
    * @params {Function} callback
    */
-  getSupportedFeatureTypes: function(callback) {
-    this.doRequest(URLS.FEATURE_TYPES, callback);
+  supportedFeatureTypes: function(params, callback) {
+    this.doRequest(URLS.FEATURE_TYPES, params, callback);
   },
 };
