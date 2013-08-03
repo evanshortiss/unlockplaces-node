@@ -1,0 +1,28 @@
+{
+  "name": "unlockapi-node",
+  "keywords": ["unlock", "api", "json"],
+  "preferGlobal": true,
+  "version": "0.0.1",
+  "homepage": "https://github.com/evanshortiss/unlockapi-node",
+  "author": "Evan Shortiss",
+  "description": "A node.js module to make interfacing with the Unlock location API easy.",
+  "contributors": [{
+      "name": "Evan Shortiss",
+      "url": "https://github.com/evanshortiss"
+    }
+  ],
+  "main": "./index.js",
+  "directories" : {
+      "lib": "./lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:evanshortiss/unlockapi-node.git"
+  },
+  "dependencies": {
+    "request": "2.21.0"
+  },
+  "engines": {
+    "node": ">=0.8.8"
+  }
+}
