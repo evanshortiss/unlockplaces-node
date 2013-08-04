@@ -120,7 +120,7 @@ Run a footprintLookup against the API. The params object must contain an 'id' pa
 <a name="featureLookup" />
 ### featureLookup(params, callback)
 
-Run a footprintLookup against the API. The params object must contain an 'id' parameter.
+Run a featureLookup against the API. The params object must contain an 'id' parameter.
 
 ---------------------------------------
 
