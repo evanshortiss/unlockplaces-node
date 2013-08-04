@@ -22,7 +22,8 @@ The most straight forward use case is to require the module and simply call meth
     name: 'dublin',
     country: 'ireland'
   }, function(err, res) {
-    console.log(res.features);
+    // Assuming we're using json as format
+    res = JSON.parse(res);
   });
 ```
 
@@ -40,7 +41,8 @@ An alternative use case might be to create multiple Unlock Places objects and us
   useIreland.search({
     name: 'dublin'
   }, function(err, res) {
-
+    // Assuming we're using json as format
+    res = JSON.parse(res);
   });
 ```
 
@@ -125,7 +127,7 @@ Run a featureLookup against the API. The params object must contain an 'id' para
 ---------------------------------------
 
 <a name="closestMatchSearch" />
-### search(params, callback)
+### closestMatchSearch(params, callback)
 
 Run a search against the API and returns a single result only.
 
