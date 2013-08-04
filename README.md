@@ -83,7 +83,7 @@ Returns the default response format to use.
 <a name="setGazetteer" />
 ### setGazetteer(gazetteer)
 
-Set the default gazetteer for each API request. Can be 'json', 'xml', 'kml' or 'txt'.
+Set the default gazetteer for each API request. Can be 'unlock', 'os' or 'naturalearth'
 
 ---------------------------------------
 
@@ -97,7 +97,17 @@ Returns the default gazetteer to use for each request.
 <a name="setDefaults" />
 ### setDefaults(defaults)
 
-Set default parameters to add to each request.
+Set default parameters to add to each request. For example:
+```javascript
+  var places = require('unlock-places');
+
+  // All of these are optional. Old defaults will be erased.
+  places.setDefaults({
+    format: 'xml',
+    name: 'london',
+    gazetteer: 'naturalearth'
+  });
+```
 
 ---------------------------------------
 
@@ -111,7 +121,24 @@ Return the defaults being used in each request.
 <a name="search" />
 ### search(params, callback)
 
-Run a locations search against the API. Params is an object that contains any items to add to the request querystring.
+Run a locations search against the API. Params is an object that contains any items to add to the request querystring. Any params included that conflict those in defaults will override the default setting.
+
+```javascript
+  var places = require('unlock-places');
+
+  // All of these are optional. Old defaults will be erased.
+  places.setDefaults({
+    format: 'xml',
+    name: 'london',
+    gazetteer: 'naturalearth'
+  });
+
+  // Do a request but override the xml response format default.
+  places.search({
+    name: 'paris',
+    format: 'txt'
+  });
+```
 
 ---------------------------------------
 

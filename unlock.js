@@ -22,6 +22,8 @@ URLS = {
  */
 
 function Unlock(defaults) {
+  this.defaults = defaults || {};
+
   this.setDefaults(defaults);
 }
 
@@ -74,14 +76,14 @@ Unlock.prototype = {
       gazetteer: 'unlock'
     };
 
-    // Always use JSON as default data format
+    // Ensure we always have format
     if (!this.defaults.format) {
       this.defaults.format = 'json';
     }
 
-    // Always use 'unlock' as default gazetteer
+    // Ensure we always have gazettteer
     if (!this.defaults.gazetteer) {
-      this.defaults.gazetteer = 'gazetteer';
+      this.defaults.gazetteer = 'unlock';
     }
   },
 
