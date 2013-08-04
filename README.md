@@ -39,9 +39,10 @@ An alternative use case might be to create multiple Unlock Places objects and us
     country: 'ireland'
   });
 
-  // Do a search for places named 'Dublin' in ireland
+  // Do a search for places named 'Dublin' in ireland and use the 'os' gazetteer
   useIreland.search({
-    name: 'dublin'
+    name: 'dublin',
+    gazetteer: 'os'
   }, function(err, res) {
     // Assuming we're using json as format
     res = JSON.parse(res);
