@@ -2,7 +2,7 @@ unlockplaces-node
 ==============
 
 ## About
-A node.js module to make interfacing with the Unlock Places API easy. The API documentation is available <a href="http://unlock.edina.ac.uk/places/introduction" target="_blank">here</a>.
+A node.js module to make interfacing with the Unlock Places API by <a href="http://edina.ac.uk/">EDINA</a> easy. The API documentation is available <a href="http://unlock.edina.ac.uk/places/introduction" target="_blank">here</a>.
 
 ## Install
 Install as a standard npm module.
@@ -13,6 +13,8 @@ Install as a standard npm module.
 
 ## Usage
 The most straight forward use case is to require the module and simply call methods that are exposed by the API as explained in the <a href="http://unlock.edina.ac.uk/places/queries/" target="_blank">docs</a>.
+
+Each request to the API will by default use the 'unlock' gazetteer and 'json' as the format option. These can be overridden by using [setResponseFormat](#setResponseFormat), [setGazetteer](#setGazetteer), [setDefaults](#setDefaults) or by creating a new Unlock object and providing defaults to the constructor. 
 
 ```javascript
   var unlock = require('unlock-places');
