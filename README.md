@@ -58,65 +58,78 @@ An alternative use case might be to create multiple Unlock Places objects and us
 * [closestMatchSearch](#closestMatchSearch)
 * [supportedFeatureTypes](#supportedFeatureTypes)
 
+
+---------------------------------------
+
 <a name="setResponseFormat" />
 ### setResponseFormat(format)
 
 Set the default response format for each API request. Can be 'json', 'xml', 'kml' or 'txt'.
 
+---------------------------------------
 
 <a name="getResponseFormat" />
 ### getResponseFormat()
 
 Returns the default response format to use.
 
+---------------------------------------
 
 <a name="setGazetteer" />
 ### setGazetteer(gazetteer)
 
 Set the default gazetteer for each API request. Can be 'json', 'xml', 'kml' or 'txt'.
 
+---------------------------------------
 
 <a name="getGazetteer" />
 ### getGazetteer()
 
 Returns the default gazetteer to use for each request.
 
+---------------------------------------
 
 <a name="setDefaults" />
 ### setDefaults(defaults)
 
 Set default parameters to add to each request.
 
+---------------------------------------
 
 <a name="getDefaults" />
 ### getDefaults()
 
 Return the defaults being used in each request.
 
+---------------------------------------
 
 <a name="search" />
 ### search(params, callback)
 
 Run a locations search against the API. Params is an object that contains any items to add to the request querystring.
 
+---------------------------------------
 
 <a name="footprintLookup" />
 ### footprintLookup(params, callback)
 
 Run a footprintLookup against the API. The params object must contain an 'id' parameter.
 
+---------------------------------------
 
 <a name="featureLookup" />
 ### featureLookup(params, callback)
 
 Run a footprintLookup against the API. The params object must contain an 'id' parameter.
 
+---------------------------------------
 
 <a name="closestMatchSearch" />
 ### search(params, callback)
 
 Run a search against the API and returns a single result only.
 
+---------------------------------------
 
 <a name="supportedFeatureTypes" />
 ### search(params, callback)
