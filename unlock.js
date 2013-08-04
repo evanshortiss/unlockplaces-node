@@ -72,6 +72,11 @@ Unlock.prototype = {
     if (!this.defaults.format) {
       this.defaults.format = 'json';
     }
+
+    // Always use 'unlock' as default gazetteer
+    if (!this.defaults.gazetteer) {
+      this.defaults.gazetteer = 'gazetteer';
+    }
   },
 
 
@@ -133,106 +138,49 @@ Unlock.prototype = {
 
 
   /**
-   * Takes an array of strings and converts into single string
-   * @param {Array}     arr
+   * Search for places by provided params.
+   * @param {Object}    params
    * @param {Function}  callback
    */
-  arrayToString: function(arr, callback) {
-    var str = '';
-
-    arr.forEach(function(item) {
-      str += item + ',';
-    });
-
-    return str;
-  },
-
-
-  /**
-   * Search for places by name.
-   * @param {Mixed}     names     String/Array of names
-   * @param {Object}    [params]  Optional extra query parameters
-   * @param {Function}  callback
-   */
-  searchByName: function(names, params, callback) {
-    // Check has user specified limit
-    if (typeof params === 'function') {
-      callback = params;
-      params = {};
-    }
-
-    // Parse in names as comma seperated if not already provided in this format
-    if (typeof names !== 'string') {
-      names = this.arrayToString(names);
-    }
-
-    params.name = names;
-    this.doRequest(URLS.SEARCH_URL, params, callback);
-  },
-
-
-  /**
-   * Search for places by name in a provided country.
-   * @param {Mixed}     name        String/Array of names
-   * @param {Mixed}     country     String/Array of countries
-   * @param {Object}    [params]    Optional extra query parameters
-   * @param {Function}  callback
-   */
-  searchByCountryAndName: function(name, country, params, callback) {
-    var self = this;
-
-    if (typeof params === 'function') {
-      callback = params;
-      params = {};
-    }
-
-    // Parse in names as comma seperated if not already provided in this format
-    if (typeof name !== 'string') {
-      name = this.arrayToString(name);
-    }
-    if (typeof country !== 'string') {
-      country = this.arrayToString(country);
-    }
-
-    params.country = country;
-    params.name = name;
+  search: function(params, callback) {
     this.doRequest(URLS.SEARCH_URL, params, callback);
   },
 
 
   /**
    * Get footprint for a provided area
-   * @param {Number}    id
-   * @param {Object}    [params]
+   * @param {Object}    params
    * @param {Function}  callback
    */
-  footprintLookup: function(id, params, callback) {
-    params.identifier = id;
+  footprintLookup: function(params, callback) {
+    if (!params.id) {
+      return callback({
+        msg: 'footprintLookup requires an "identifier" in parameters.'
+      }, null);
+    }
+
     this.doRequest(URLS.FOOTPRINT_LOOKUP, params, callback);
   },
 
 
   /**
    * Search for a feature by ID
-   * @param {Number}    id
-   * @param {Object}    [params]
+   * @param {Object}    params
    * @param {Function}  callback
    */
-  featureLookup: function(id, params, callback) {
-    if (typeof params === 'function') {
-      callback = params;
-      params = {};
+  featureLookup: function(params, callback) {
+    if (!params.id) {
+      return callback({
+        msg: 'featureLookup requires an "identifier" in parameters.'
+      }, null);
     }
-
-    // Add in identifier to querystring params
-    params.identifier = id;
 
     this.doRequest(URLS.FEATURE_LOOKUP, params, callback);
   },
 
 
   /**
-   * Search for closest match for params
+   * Search for closest match for params, returns just one result.
    * @param {Object}    params
    * @param {Function}  callback
    */

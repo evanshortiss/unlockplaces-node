@@ -1,4 +1,124 @@
-unlockapi-node
+unlockplaces-node
 ==============
 
-A node.js module to make interfacing with the Unlock location API easy.
+## About
+A node.js module to make interfacing with the Unlock Places API easy. The API documentation is available <a href="http://unlock.edina.ac.uk/places/introduction" target="_blank">here</a>.
+
+## Install
+Install as a standard npm module.
+
+```
+  $ npm install unlock-places
+```
+
+## Usage
+The most straight forward use case is to require the module and simply call methods that are exposed by the API as explained in the <a href="http://unlock.edina.ac.uk/places/queries/" target="_blank">docs</a>.
+
+```javascript
+  var unlock = require('unlock-places');
+
+  // Do a loaction search
+  unlock.search({
+    name: 'dublin',
+    country: 'ireland'
+  }, function(err, res) {
+    console.log(res.features);
+  });
+```
+
+An alternative use case might be to create multiple Unlock Places objects and use them for different purposes. This will allow you to apply defualts to each request without applying them as defaults to the originally required Unlock Places object.
+
+```javascript
+  var unlock = require('unlock-places');
+
+  // Each request using this object will include the 'country' parameter
+  var useIreland = new unlock.Class({
+    country: 'ireland'
+  });
+
+  // Do a search for places named 'Dublin' in ireland
+  useIreland.search({
+    name: 'dublin'
+  }, function(err, res) {
+
+  });
+```
+
+## Documentation
+
+* [setResponseFormat](#setResponseFormat)
+* [getResponseFormat](#getResponseFormat)
+* [setGazetteer](#setGazetteer)
+* [getGazetteer](#getGazetteer)
+* [setDefaults](#setDefaults)
+* [getDefaults](#getDefaults)
+* [search](#search)
+* [footprintLookup](#footprintLookup)
+* [featureLookup](#featureLookup)
+* [closestMatchSearch](#closestMatchSearch)
+* [supportedFeatureTypes](#supportedFeatureTypes)
+
+<a name="setResponseFormat" />
+### setResponseFormat(format)
+
+Set the default response format for each API request. Can be 'json', 'xml', 'kml' or 'txt'.
+
+
+<a name="getResponseFormat" />
+### getResponseFormat()
+
+Returns the default response format to use.
+
+
+<a name="setGazetteer" />
+### setGazetteer(gazetteer)
+
+Set the default gazetteer for each API request. Can be 'json', 'xml', 'kml' or 'txt'.
+
+
+<a name="getGazetteer" />
+### getGazetteer()
+
+Returns the default gazetteer to use for each request.
+
+
+<a name="setDefaults" />
+### setDefaults(defaults)
+
+Set default parameters to add to each request.
+
+
+<a name="getDefaults" />
+### getDefaults()
+
+Return the defaults being used in each request.
+
+
+<a name="search" />
+### search(params, callback)
+
+Run a locations search against the API. Params is an object that contains any items to add to the request querystring.
+
+
+<a name="footprintLookup" />
+### footprintLookup(params, callback)
+
+Run a footprintLookup against the API. The params object must contain an 'id' parameter.
+
+
+<a name="featureLookup" />
+### featureLookup(params, callback)
+
+Run a footprintLookup against the API. The params object must contain an 'id' parameter.
+
+
+<a name="closestMatchSearch" />
+### search(params, callback)
+
+Run a search against the API and returns a single result only.
+
+
+<a name="supportedFeatureTypes" />
+### search(params, callback)
+
+Returns the supported feature types for the given params.

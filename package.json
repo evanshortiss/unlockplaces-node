@@ -1,23 +1,21 @@
 {
-  "name": "unlockapi-node",
-  "keywords": ["unlock", "api", "json"],
-  "preferGlobal": true,
+  "name": "unlock-places",
+  "keywords": ["unlock", "api", "json", "places", "edina"],
   "version": "0.0.1",
-  "homepage": "https://github.com/evanshortiss/unlockapi-node",
+  "homepage": "https://github.com/evanshortiss/unlockplaces-node",
   "author": "Evan Shortiss",
-  "description": "A node.js module to make interfacing with the Unlock location API easy.",
+  "description": "A node.js module to make interfacing with the Unlock Places API easy.",
   "contributors": [{
-      "name": "Evan Shortiss",
-      "url": "https://github.com/evanshortiss"
-    }
-  ],
+    "name": "Evan Shortiss",
+    "url": "https://github.com/evanshortiss"
+  }],
   "main": "./index.js",
-  "directories" : {
-      "lib": "./lib"
+  "directories": {
+    "test": "./test"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:evanshortiss/unlockapi-node.git"
+    "url": "git@github.com:evanshortiss/unlockplaces-node.git"
   },
   "dependencies": {
     "request": "2.21.0"
