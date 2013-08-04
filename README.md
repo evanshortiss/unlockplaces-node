@@ -132,6 +132,6 @@ Run a search against the API and returns a single result only.
 ---------------------------------------
 
 <a name="supportedFeatureTypes" />
-### search(params, callback)
+### supportedFeatureTypes(params, callback)
 
 Returns the supported feature types for the given params.
