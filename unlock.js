@@ -140,6 +140,7 @@ Unlock.prototype = {
    * @params {Function} callback
    */
   doRequest: function(url, params, callback) {
+    var self = this;
     if (typeof params === 'function') {
       callback = params;
       params = {};
@@ -162,7 +163,7 @@ Unlock.prototype = {
       }
 
       // If user is using JSON return an object
-      else if (this.getResponseFormat() === 'json') {
+      else if (self.getResponseFormat() === 'json') {
         try {
           body = JSON.parse(body);
         } catch (e) {
