@@ -149,13 +149,31 @@ Unlock.prototype = {
       url: url,
       qs: this.buildParams(params),
     }, function(err, res, body) {
+      // Return error
       if (err) {
         return callback(err, null);
-      } else if (res.statusCode !== 200) {
+      }
+      
+      // Invalid response/error
+      else if (res.statusCode !== 200) {
         return callback({
           err: 'Request error, status code: ' + res.statusCode
         }, null);
-      } else {
+      }
+
+      // If user is using JSON return an object
+      else if (this.getResponseFormat() === 'json') {
+        try {
+          body = JSON.parse(body);
+        } catch (e) {
+          return callback(e, null);
+        }
+
+        return callback(null, body);
+      }
+
+      // Just return the response if we get here
+      else {
         return callback(null, body);
       }
     });
